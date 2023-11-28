@@ -1,0 +1,220 @@
+#
+# 'make'        build executable file 'main'
+# 'make clean'  removes all .o and executable files
+#
+
+# define the C compiler to use
+CC = gcc
+
+# define any compile-time flags
+CFLAGS	:= -Wall -Wextra -g
+
+# define library paths in addi#
+# 'make'        build executable file 'main'
+# 'make clean'  removes all .o and executable files
+#
+
+# define the C compiler to use
+CC = gcc
+
+# define any compile-time flags
+CFLAGS	:= -Wall -Wextra -g
+
+# define library paths in addition to /usr/lib
+#   if I wanted to include libraries not in /usr/lib I'd specify
+#   their path using -Lpath, something like:
+LFLAGS = -ljson-c -lpthread
+
+# define output directory
+OUTPUT	:= output
+
+# define source directory
+SRC		:= src
+
+# define include directory
+INCLUDE	:= include
+
+# define lib directory
+LIB		:= lib
+
+# define obj directory
+OBJ		:= obj
+
+ifeq ($(OS),Windows_NT)
+MAIN	:= main.exe
+SOURCEDIRS	:= $(SRC)
+INCLUDEDIRS	:= $(INCLUDE)
+LIBDIRS		:= $(LIB)
+FIXPATH = $(subst /,\,$1)
+RM			:= del /q /f
+MD	:= mkdir
+else
+MAIN	:= main
+SOURCEDIRS	:= $(shell find $(SRC) -type d)
+INCLUDEDIRS	:= $(shell find $(INCLUDE) -type d)
+LIBDIRS		:= $(shell find $(LIB) -type d)
+OBJDIRS		:= $(shell find $(OBJ) -type d)
+FIXPATH = $1
+RM = rm -f
+MD	:= mkdir -p
+endif
+
+# define any directories containing header files other than /usr/include
+INCLUDES	:= $(patsubst %,-I%, $(INCLUDEDIRS:%/=%))
+
+# define the C libs
+LIBS		:= $(patsubst %,-L%, $(LIBDIRS:%/=%))
+
+# define the C source files
+SOURCES		:= $(wildcard $(patsubst %,%/*.c, $(SOURCEDIRS)))
+
+# define the C object files 
+OBJECTS		:= $(SOURCES:.c=.o)
+
+# redefine the C object files with the path
+OBJECTS_FILE		:= $(addprefix $(OBJDIRS)/,$(notdir $(OBJECTS)))
+
+# define the dependency output files
+DEPS		:= $(SOURCES:.c=.d)
+
+# redefine the dependency output files with the path
+DEPS_FILE		:= $(addprefix $(OBJDIRS)/,$(notdir $(DEPS)))
+
+
+#
+# The following part of the makefile is generic; it can be used to 
+# build any executable just by changing the definitions above and by
+# deleting dependencies appended to the file from 'make depend'
+#
+
+OUTPUTMAIN	:= $(call FIXPATH,$(OUTPUT)/$(MAIN))
+
+all: $(OUTPUT) $(MAIN)
+	@echo Executing 'all' complete!
+
+$(OUTPUT):
+	$(MD) $(OUTPUT)
+
+$(MAIN): $(OBJECTS) 
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUTPUTMAIN) $(OBJECTS_FILE) $(LFLAGS) $(LIBS)
+
+# include all .d files
+-include $(DEPS_FILE)
+
+# this is a suffix replacement rule for building .o's and .d's from .c's
+# it uses automatic variables $<: the name of the prerequisite of
+# the rule(a .c file) and $@: the name of the target of the rule (a .o file) 
+# -MMD generates dependency output files same name as the .o file
+# (see the gnu make manual section about automatic variables)
+.c.o:
+	$(CC) $(CFLAGS) $(INCLUDES) -c -MMD $<  -o $(OBJDIRS)/$(notdir $@)
+
+.PHONY: clean
+clean:
+	$(RM) $(OUTPUTMAIN)
+	$(RM) $(call FIXPATH,$(OBJECTS))
+	$(RM) $(call FIXPATH,$(DEPS))
+	@echo Cleanup complete!
+
+run: all
+	./$(OUTPUTMAIN)
+	@echo Executing 'run: all' complete!
+tion to /usr/lib
+#   if I wanted to include libraries not in /usr/lib I'd specify
+#   their path using -Lpath, something like:
+LFLAGS = -ljson-c -lpthread
+
+# define output directory
+OUTPUT	:= output
+
+# define source directory
+SRC		:= src
+
+# define include directory
+INCLUDE	:= include
+
+# define lib directory
+LIB		:= lib
+
+# define obj directory
+OBJ		:= obj
+
+ifeq ($(OS),Windows_NT)
+MAIN	:= main.exe
+SOURCEDIRS	:= $(SRC)
+INCLUDEDIRS	:= $(INCLUDE)
+LIBDIRS		:= $(LIB)
+FIXPATH = $(subst /,\,$1)
+RM			:= del /q /f
+MD	:= mkdir
+else
+MAIN	:= main
+SOURCEDIRS	:= $(shell find $(SRC) -type d)
+INCLUDEDIRS	:= $(shell find $(INCLUDE) -type d)
+LIBDIRS		:= $(shell find $(LIB) -type d)
+OBJDIRS		:= $(shell find $(OBJ) -type d)
+FIXPATH = $1
+RM = rm -f
+MD	:= mkdir -p
+endif
+
+# define any directories containing header files other than /usr/include
+INCLUDES	:= $(patsubst %,-I%, $(INCLUDEDIRS:%/=%))
+
+# define the C libs
+LIBS		:= $(patsubst %,-L%, $(LIBDIRS:%/=%))
+
+# define the C source files
+SOURCES		:= $(wildcard $(patsubst %,%/*.c, $(SOURCEDIRS)))
+
+# define the C object files 
+OBJECTS		:= $(SOURCES:.c=.o)
+
+# move the object files into the obj directory
+#OBJECTS		:= $(addprefix $(OBJDIRS)/,$(notdir $(OBJECTS)))
+
+# define the dependency output files
+DEPS		:= $(SOURCES:.c=.d)
+
+# move the dependency output files into the obj directory
+#DEPS		:= $(addprefix $(OBJDIRS)/,$(notdir $(DEPS)))
+
+
+#
+# The following part of the makefile is generic; it can be used to 
+# build any executable just by changing the definitions above and by
+# deleting dependencies appended to the file from 'make depend'
+#
+
+OUTPUTMAIN	:= $(call FIXPATH,$(OUTPUT)/$(MAIN))
+
+all: $(OUTPUT) $(MAIN)
+	@echo Executing 'all' complete!
+
+$(OUTPUT):
+	$(MD) $(OUTPUT)
+
+$(MAIN): $(OBJECTS) 
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUTPUTMAIN) $(OBJECTS) $(LFLAGS) $(LIBS)
+
+# include all .d files
+-include $(DEPS)
+
+# this is a suffix replacement rule for building .o's and .d's from .c's
+# it uses automatic variables $<: the name of the prerequisite of
+# the rule(a .c file) and $@: the name of the target of the rule (a .o file) 
+# -MMD generates dependency output files same name as the .o file
+# (see the gnu make manual section about automatic variables)
+.c.o:
+	$(CC) $(CFLAGS) $(INCLUDES) -c -MMD $<  -o $@
+
+.PHONY: clean
+clean:
+	$(RM) $(OUTPUTMAIN)
+	$(RM) $(call FIXPATH,$(OBJECTS))
+	$(RM) $(call FIXPATH,$(DEPS))
+	@echo Cleanup complete!
+
+run: all
+	./$(OUTPUTMAIN)
+	@echo Executing 'run: all' complete!
