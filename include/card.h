@@ -1,4 +1,4 @@
-#ifdef __CARD_H__
+#ifndef __CARD_H__
 #define __CARD_H__
 
 /**

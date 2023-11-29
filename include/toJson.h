@@ -6,6 +6,4 @@
 #include <string.h>
 #include <json-c/json.h>
 
-json_object* ;
-
 #endif

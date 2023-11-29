@@ -1,0 +1,19 @@
+{
+    "files.associations": {
+        "inet.h": "c",
+        "errno.h": "c",
+        "features.h": "c",
+        "stdio.h": "c",
+        "time.h": "c",
+        "socket.h": "c",
+        "string.h": "c",
+        "types.h": "c",
+        "in.h": "c",
+        "cstdlib": "c",
+        "json.h": "c"
+    },
+    "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
+        "clang-diagnostic-implicit-function-declaration"
+    ],
+    "C_Cpp.errorSquiggles": "disabled"
+}
