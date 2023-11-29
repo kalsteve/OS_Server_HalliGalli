@@ -4,9 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include <json-c/json.h>
-#include "hwmoniter.h"
 
-json_object* hwInfoToJson(Hw_info *);
+json_object* ;
+
 #endif
