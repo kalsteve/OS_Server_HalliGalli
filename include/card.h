@@ -17,6 +17,7 @@ typedef enum _CARD_TYPE {
     PRUNE
 } CARD_TYPE;
 
+
 typedef enum _CARD_VOLUME {
     NULL,
     ONE_FRUIT = 5,
@@ -34,7 +35,7 @@ typedef struct _Card{
 
 typedef Card* CardDeck;
 
-CardDeck initCardDeck();
+CardDeck initCardDeck(const int cardNum);
 Card createCard(CARD_TYPE type, CARD_VOLUME volume);
 void destroyCard(Card card[]);
 void destroyCardDeck(Card card[]);
