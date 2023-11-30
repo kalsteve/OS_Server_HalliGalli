@@ -14,8 +14,6 @@
         "json.h": "c",
         "pthread.h": "c"
     },
-    "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
-        "clang-diagnostic-implicit-function-declaration"
-    ],
-    "C_Cpp.errorSquiggles": "disabled"
+    "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+    "C_Cpp.codeAnalysis.runAutomatically": true
 }

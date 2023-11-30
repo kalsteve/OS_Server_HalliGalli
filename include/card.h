@@ -7,6 +7,11 @@
  * @brief This file contains the declaration of the card struct and its functions.
 */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
 #define MAX_CARD_NUM 56
 #define MAX_CARD_TYPE 4
 #define MAX_CARD_VOLUME 5
@@ -78,10 +83,11 @@ void shuffleCardDeck(CardDeck cardDeck, int card_num);
  * @param des 저장할 카드 덱
  * @param src 대상 카드 덱
  * @param index 카드 덱의 시작 인덱스
+ * @param max_index 카드 덱의 마지막 인덱스
  * @param cardNum 카드 갯수
  * @return 성공 시 마지막 인덱스, 실패 시 < 0
 */
-int splitCardDeck(CardDeck des, CardDeck src, int index, int card_num);
+int splitCardDeck(CardDeck des, CardDeck src, int index, int max_index, int card_num);
 
 
 #endif

@@ -6,7 +6,7 @@
 // 게임 초기화 함수
 Game initGame() {
     // 카드 덱 초기화
-    cardDeck = initCardDeck();
+    CardDeck cardDeck = initCardDeck();
     // 플레이어 초기화
     player = initPlayer();
     // 게임 상태 초기화
@@ -22,5 +22,7 @@ void startGame(Game *game) {
     // 게임 상태 변경
     game->status = GAME_STATUS_START;
     // 플레이어에게 카드 배분
-    splitCardDeck(player->cardDeck, cardDeck, 0, CARD_NUM_MAX, PLAYER_CARD_NUM);
+    for(int i = 0; i < game->playerNum; i++) {
+        splitCardDeck(game->players[i].cardDeck, game->cardDeck, i, game->playerNum, 5);
+    }
 }

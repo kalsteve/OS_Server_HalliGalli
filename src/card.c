@@ -7,13 +7,13 @@
 CardDeck initCardDeck() {
     int card_num = 0;
     Card *cardDeck;
-    cardDeck = (Card *)malloc(sizeof(Card) * CARD_NUM_MAX);
+    cardDeck = (Card *)malloc(sizeof(Card) * MAX_CARD_NUM);
 
     // 카드 덱 초기화
-    for(int volume = 0; volume < CARD_VOLUME_MAX; volume++) {
-        for(int repeat = 0; repeat < CARD_VOLUMES[volume] repeat++) {
-            for(int type = 0; type < CARD_TYPE_MAX; type++) {
-                card_deck[card_num] = createCard(type, volume);
+    for(int volume = 0; volume < MAX_CARD_VOLUME; volume++) {
+        for(int repeat = 0; repeat < CARD_VOLUMES[volume]; repeat++) {
+            for(int type = 0; type < MAX_CARD_TYPE; type++) {
+                cardDeck[card_num] = createCard(type, volume);
                 card_num++;
             }
         }
