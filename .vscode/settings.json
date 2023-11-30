@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.c": "c",
         "inet.h": "c",
         "errno.h": "c",
         "features.h": "c",
@@ -10,7 +11,8 @@
         "types.h": "c",
         "in.h": "c",
         "cstdlib": "c",
-        "json.h": "c"
+        "json.h": "c",
+        "pthread.h": "c"
     },
     "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
         "clang-diagnostic-implicit-function-declaration"

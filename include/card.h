@@ -8,24 +8,34 @@
 */
 
 #define MAX_CARD_NUM 56
+#define MAX_CARD_TYPE 4
+#define MAX_CARD_VOLUME 5
 
-typedef enum _CARD_TYPE {
-    NULL,
+//카드 종류 정의
+typedef enum {
     STRAWBERRY,
     BANANA,
     LIME,
     PRUNE
 } CARD_TYPE;
 
-
-typedef enum _CARD_VOLUME {
-    NULL,
+//카드 종류별 갯수의 정의
+typedef enum {
     ONE_FRUIT = 5,
     TWO_FRUIT = 3,
     THREE_FRUIT = 3,
     FOUR_FRUIT = 2,
-    FIVE_FRUIT = 1,
+    FIVE_FRUIT = 1
 } CARD_VOLUME;
+
+//카드 종류별 갯수의 배열
+const int CARD_VOLUMES[] = {
+    ONE_FRUIT, 
+    TWO_FRUIT, 
+    THREE_FRUIT, 
+    FOUR_FRUIT, 
+    FIVE_FRUIT
+};
 
 typedef struct _Card{
     int id;
@@ -35,12 +45,43 @@ typedef struct _Card{
 
 typedef Card* CardDeck;
 
-CardDeck initCardDeck(const int cardNum);
+/**
+ * 카드 덱을 생성하는 함수입니다.
+ * @param cardNum 카드 덱의 크기
+ * @return 생성된 카드 덱
+*/
+CardDeck initCardDeck();
+
+/**
+ * 카드를 생성하는 함수입니다.
+ * @param type 카드의 종류
+ * @param volume 카드의 개수
+ * @return 생성된 카드
+*/
 Card createCard(CARD_TYPE type, CARD_VOLUME volume);
-void destroyCard(Card card[]);
-void destroyCardDeck(Card card[]);
-CardDeck shuffleCardDeck(CardDeck cardDeck);
-CardDeck splitCardDeck(CardDeck cardDeck, int num);
+
+/**
+ * 카드 덱을 파괴하는 함수입니다.
+ * @param cardDeck 카드 덱
+*/
+void destroyCardDeck(CardDeck cardDeck);
+
+/**
+ * 카드 덱을 섞는 함수입니다.
+ * @param cardDeck 카드 덱
+ * @param card_num 카드 갯수
+*/
+void shuffleCardDeck(CardDeck cardDeck, int card_num);
+
+/**
+ * 카드 덱을 섞는 함수입니다.
+ * @param des 저장할 카드 덱
+ * @param src 대상 카드 덱
+ * @param index 카드 덱의 시작 인덱스
+ * @param cardNum 카드 갯수
+ * @return 성공 시 마지막 인덱스, 실패 시 < 0
+*/
+int splitCardDeck(CardDeck des, CardDeck src, int index, int card_num);
 
 
 #endif
