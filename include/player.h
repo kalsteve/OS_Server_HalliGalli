@@ -7,4 +7,10 @@ typedef struct _Player{
     CardDeck cardDeck;
 } Player;
 
+typedef Player* PlayerData;
+
+PlayerData initPlayer();
+void destroyPlayer(PlayerData player);
+
+
 #endif

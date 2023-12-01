@@ -42,8 +42,8 @@
 #define MAX_BUFFER_SIZE 512
 #define MAX_CLIENT_NUM 6
 
-// 통신용 함수를 정의한다.
-void initSocket(const int port, const int client_num);
+
+int initSocket(const int port, const int client_num);
 int createSocket(int socket);
 int bindSocket(int socket_fd,struct sockaddr_in *serv_addr  , int addr_len, int port);
 int listenSocket(int socket, int backlog);
