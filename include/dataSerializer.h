@@ -21,7 +21,7 @@
  * @param game 게임 정보
  * @return json 형식의 문자열
  */
-char *makeGameStartJson(Game *game);
+char* makeGameStartJson(Game *game);
 
 /**
  * @brief 플레이어의 턴을 알리는 json 형식의 문자열을 생성하는 함수입니다.

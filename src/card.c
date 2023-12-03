@@ -41,14 +41,13 @@ CardDeck* createCardDeck(int card_num) {
 }
 
 void setCard(Card* card, int id,  CARD_TYPE type, CARD_VOLUME volume) {
-    card = (Card *)malloc(sizeof(Card));
     card->id = id;
     card->type = type;
     card->volume = volume;
 }
 
 void destroyCardDeck(CardDeck* cardDeck) {
-    free(cardDeck->cards)
+    free(cardDeck->cards);
     free(cardDeck);
 }
 
@@ -86,18 +85,15 @@ int splitCardDeck(CardDeck* des, CardDeck* src, int index, int card_num) {
     }
     
     // 카드 덱 교체
-    free(des);
     des = new_des;
+    free(des);
     
     return end_index; // 다음 카드 덱의 시작 인덱스 반환
 }
 
 // 카드 덱에서 카드를 뽑는 함수
-Card drawCard(CardDeck cardDeck, int size) {
-    CardDeck temp = (CardDeck)malloc(sizeof(Card) * (MAX_CARD_NUM - 1));
-    Card card = cardDeck[0];
-
-    
-
+Card drawCard(CardDeck* cardDeck) {
+    Card card = cardDeck->cards[cardDeck->card_num - 1];
+    cardDeck->card_num--;
     return card;
 }

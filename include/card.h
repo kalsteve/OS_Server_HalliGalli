@@ -74,38 +74,37 @@ CardDeck* createCardDeck(int card_num);
  * @param type 카드의 종류
  * @param volume 카드의 과일 갯수
 */
-void setCard(Card* card, int id,  CARD_TYPE type, CARD_VOLUME volume)
+void setCard(Card* card, int id,  CARD_TYPE type, CARD_VOLUME volume);
 
 /**
  * 카드 덱을 파괴하는 함수입니다.
  * @param cardDeck 카드 덱
 */
-void destroyCardDeck(CardDeck cardDeck);
+void destroyCardDeck(CardDeck* cardDeck);
 
 /**
  * 카드 덱을 섞는 함수입니다.
  * @param cardDeck 카드 덱
  * @param card_num 카드 갯수
 */
-void shuffleCardDeck(CardDeck cardDeck, int card_num);
+void shuffleCardDeck(CardDeck* cardDeck, int card_num);
 
 /**
  * 카드 덱을 섞는 함수입니다.
  * @param des 저장할 카드 덱
  * @param src 대상 카드 덱
  * @param index 카드 덱의 시작 인덱스
- * @param max_index 카드 덱의 마지막 인덱스
  * @param cardNum 카드 갯수
  * @return 성공 시 마지막 인덱스, 실패 시 < 0
 */
-int splitCardDeck(CardDeck des, CardDeck src, int index, int max_index, int card_num);
+int splitCardDeck(CardDeck* des, CardDeck* src, int index, int card_num);
 
 /**
  * 카드 덱으로부터 카드를 뽑는 함수입니다.
  * @param cardDeck 카드 덱
  * @return 뽑은 카드
 */
-Card* drawCard(CardDeck cardDeck);
+Card drawCard(CardDeck* cardDeck);
 
 /**
  * 카드를 덱에 넣는 함수입니다.
@@ -119,7 +118,7 @@ void putCardToDeck(Card card, CardDeck cardDeck);
  * @param src 대상 카드 덱
  * @param des 저장할 카드 덱
 */
-void putCardDeckToDeck(CardDeck src, CardDeck des);
+void putCardDeckToDeck(CardDeck* src, CardDeck* des);
 
 
 

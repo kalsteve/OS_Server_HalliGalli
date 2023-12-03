@@ -4,22 +4,22 @@
 #include "game.h"
 
 // 게임 초기화 함수
-Game initGame() {
+Game* initGame() {
     // 카드 덱 초기화
-    CardDeck cardDeck = initCardDeck();
+    CardDeck* cardDeck = initCardDeck(MAX_CARD_NUM);
     // 플레이어 초기화
-    PlayersData player = initPlayer();
+    Player* player = initPlayer();
 
     // 게임 상태 초기화
-    Game game;
-    game = (Game *)malloc(sizeof(Game));
+    Game* game;
+    game = (Game *)malloc(sizeof(Game*));
     game->status = GAME_INIT;
 
     return game;
 }
 
 // 플레이어를 게임에 참여시키는 함수
-int joinPlayer(Game game, Player player) {
+int joinPlayer(Game* game, Player player) {
     // 게임 상태가 초기화 상태가 아니면 실패
     if(game->status != GAME_INIT) {
         return -1;
@@ -30,14 +30,14 @@ int joinPlayer(Game game, Player player) {
     }
 
     // 게임에 플레이어 추가
-    addPlayersData(game->players, player);
+    addPlayer(game->players, player);
     // 게임에 참여한 플레이어 수 증가
     game->join_num++;
     return 0;
 }
 
 // 플레이어의 준비 상태를 변경하는 함수
-void readyPlayer(Game game, Player player) {
+void readyPlayer(Game* game, Player* player) {
     // 게임 상태가 초기화 상태가 아니면 실패
     if(game->status != GAME_INIT) {
         perror("gameStatus is not GAME_INIT");
@@ -61,7 +61,7 @@ void readyPlayer(Game game, Player player) {
 }
 
 // 게임 준비 완료 확인 함수
-int isReady(Game game) {
+int isReady(Game* game) {
     // 게임 상태가 초기화 상태가 아니면 실패
     if(game->status != GAME_INIT) {
         perror("gameStatus is not GAME_INIT");
@@ -80,7 +80,7 @@ int isReady(Game game) {
 
 
 // 게임 시작 함수
-void startGame(Game game) {
+void startGame(Game* game) {
     // 게임 상태 변경
     game->status = GAME_START;
 
@@ -95,7 +95,7 @@ void startGame(Game game) {
 }
 
 //
-int PlayerTurn(Game game, Player player) {
+int PlayerTurn(Game* game, Player* player) {
 
     // 게임 상태가 시작 상태가 아니면 실패
     if(game->status != GAME_START) {
@@ -116,7 +116,7 @@ int PlayerTurn(Game game, Player player) {
     return 0;
 }
 
-void putCardOnTable(Game game, Player player) {
+int putCardOnTable(Game* game, Player* player) {
     // 게임 상태가 시작 상태가 아니면 실패
     if(game->status != GAME_START) {
         perror("gameStatus is not GAME_START");
@@ -129,10 +129,10 @@ void putCardOnTable(Game game, Player player) {
         return -1;
     }
 
-    putCardToDeck(drawCard(player.cardDeck), player.cardDeckOnTable);
+    putCardToDeck(drawCard(player->cardDeck), player->cardDeckOnTable);
 }
 
-int distributeCard(Game game) {
+int distributeCard(Game* game) {
     int index = 0;
     int card_num = MAX_CARD_NUM / game->join_num;
     int max_index = MAX_CARD_NUM - card_num;
@@ -144,13 +144,13 @@ int distributeCard(Game game) {
     }
 
     for(int count = 0; count < game->join_num ; count++) {
-        splitCardDeck(game->players[count++].cardDeck, game->cardDeck, index, max_index, card_num);
+        splitCardDeck(game->players[count++].cardDeck, game->cardDeck, index, card_num);
         index += card_num;
     }
 
 }
 
-int takeCardFromPlayersDeck(Game game, Player player) {
+int takeCardFromPlayersDeck(Game* game, Player* player) {
     // 게임 상태가 시작 상태가 아니면 실패
     if(game->status != GAME_START) {
         perror("gameStatus is not GAME_START");
