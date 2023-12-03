@@ -64,8 +64,11 @@ void shuffleCardDeck(CardDeck* cardDeck, int card_num) {
 
 int splitCardDeck(CardDeck* des, CardDeck* src, int index, int card_num) {
     int end_index = index + card_num;
-    CardDeck *new_des = createCardDeck(des->card_num + card_num);
-
+    int des_index = des->card_num;
+    int des_end_index = des_index + card_num;
+    int des_card_num = des->card_num + card_num;
+    Card tempDeck[MAX_CARD_NUM];
+    
     if(des == NULL || src == NULL) {
         return -1;  // 메모리 할당 실패
     }
@@ -77,16 +80,20 @@ int splitCardDeck(CardDeck* des, CardDeck* src, int index, int card_num) {
 
     // 카드 덱 복사
     for(int i = 0; i < des->card_num; i++) {
-        new_des->cards[i] = des->cards[i];
+        tempDeck[i] = des->cards[i];
     }
 
-    for(int i = 0; i < card_num; i++) {
-        new_des->cards[des->card_num + i] = src->cards[index + i];
+    // 카드 덱 붙이기
+    for(int i = index; i < end_index; i++) {
+        tempDeck[i+des_index] = src->cards[i];
     }
-    
-    // 카드 덱 교체
-    des = new_des;
-    free(des);
+
+    // 카드 덱 복사
+    for(int i = 0; i < des_end_index; i++) {
+        des->cards[i] = tempDeck[i];
+    }
+
+    des->card_num = des_card_num;
     
     return end_index; // 다음 카드 덱의 시작 인덱스 반환
 }
@@ -94,6 +101,51 @@ int splitCardDeck(CardDeck* des, CardDeck* src, int index, int card_num) {
 // 카드 덱에서 카드를 뽑는 함수
 Card drawCard(CardDeck* cardDeck) {
     Card card = cardDeck->cards[cardDeck->card_num - 1];
+    cardDeck->cards[cardDeck->card_num - 1];
     cardDeck->card_num--;
     return card;
 }
+
+// 카드 덱에 카드를 넣는 함수
+void putCardToDeck(CardDeck* cardDeck, Card card) {
+    Card temp[MAX_CARD_NUM];
+    int card_num = cardDeck->card_num + 1;
+
+    temp[0] = card;
+
+    // 카드 덱 복사
+    for(int i = 0; i < cardDeck->card_num; i++) {
+        temp[i+1] = cardDeck->cards[i];
+    }
+
+    for(int i = 0; i < card_num; i++) {
+        cardDeck->cards[i] = temp[i];
+    }
+
+    cardDeck->card_num = card_num;
+}
+
+// 카드 덱을 카드 덱에 붙이는 함수
+void putCardDeckToDeck(CardDeck* des, CardDeck* src) {
+    int total = des->card_num + src->card_num;
+    Card temp[MAX_CARD_NUM];
+
+    // 카드 덱 복사
+    for(int i = 0; i < des->card_num; i++) {
+        temp[i] = des->cards[i];
+    }
+
+    // 카드 덱 붙이기
+    for(int i = 0; i < src->card_num; i++) {
+        temp[i+des->card_num] = src->cards[i];
+    }
+
+    // 카드 덱 복사
+    for(int i = 0; i < total; i++) {
+        des->cards[i] = temp[i];
+    }
+
+    des->card_num = total;
+}
+
+

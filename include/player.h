@@ -11,7 +11,7 @@ typedef struct _Player{
 
 Player* initPlayer();
 Player* createPlayer(int id);
-Player* addPlayer(Player* players, Player player);
+Player* addPlayer(Player* players, Player* player);
 void destroyPlayer(Player* player);
 void destroyPlayers(Player* players);
 

@@ -111,7 +111,7 @@ Card drawCard(CardDeck* cardDeck);
  * @param card 카드
  * @param cardDeck 카드 덱
 */
-void putCardToDeck(Card card, CardDeck cardDeck);
+void putCardToDeck(CardDeck* cardDeck, Card card);
 
 /**
  * 카드 덱을 카드 덱에 넣는 함수입니다.

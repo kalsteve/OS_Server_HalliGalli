@@ -56,7 +56,7 @@ Game* initGame();
  * @param player 게임에 참여시킬 플레이어
  * @return 실행 결과 (0: 성공, -1: 실패)
 */
-int joinPlayer*(Game* game, Player* player);
+int joinPlayer(Game* game, Player* player);
 
 /**
  * 플레이어의 준비 상태를 변경하는 함수
@@ -64,7 +64,7 @@ int joinPlayer*(Game* game, Player* player);
  * @param player 게임을 시작할 플레이어
  * @return 실행 결과 (0: 성공, -1: 실패)
 */
-void readyPlayer*(Game* game, Player* player);
+void readyPlayer(Game* game, Player* player);
 
 /**
  * 게임이 준비가 됬는지 확인하는 함수

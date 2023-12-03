@@ -19,7 +19,7 @@ Game* initGame() {
 }
 
 // 플레이어를 게임에 참여시키는 함수
-int joinPlayer(Game* game, Player player) {
+int joinPlayer(Game* game, Player* player) {
     // 게임 상태가 초기화 상태가 아니면 실패
     if(game->status != GAME_INIT) {
         return -1;
@@ -37,7 +37,7 @@ int joinPlayer(Game* game, Player player) {
 }
 
 // 플레이어의 준비 상태를 변경하는 함수
-void readyPlayer(Game* game, Player* player) {
+int readyPlayer(Game* game, Player* player) {
     // 게임 상태가 초기화 상태가 아니면 실패
     if(game->status != GAME_INIT) {
         perror("gameStatus is not GAME_INIT");
@@ -70,7 +70,7 @@ int isReady(Game* game) {
 
     for(int count = 0; count < game->join_num ; count++) {
 
-        if(game->players[count].info != PLAYER_READY) {
+        if(game->players[count]->info != PLAYER_READY) {
             return -1;
         }
     }
@@ -86,7 +86,7 @@ void startGame(Game* game) {
 
     for(int count = 0; count < game->join_num ; count++) {
         // 플레이어의 상태 변경
-        game->players[count].info = PLAYER_GAMING;
+        game->players[count]->info = PLAYER_GAMING;
     }
 
     // 플레이어에게 카드 배분
@@ -104,7 +104,7 @@ int PlayerTurn(Game* game, Player* player) {
     }
 
     // 플레이어의 상태가 게임 중이 아니면 실패
-    if(player.info != PLAYER_GAMING) {
+    if(player->info != PLAYER_GAMING) {
         perror("playerStatus is not PLAYER_GAMING");
         return -1;
     }
@@ -124,12 +124,12 @@ int putCardOnTable(Game* game, Player* player) {
     }
 
     // 플레이어의 상태가 게임 중이 아니면 실패
-    if(player.info != PLAYER_GAMING) {
+    if(player->info != PLAYER_GAMING) {
         perror("playerStatus is not PLAYER_GAMING");
         return -1;
     }
 
-    putCardToDeck(drawCard(player->cardDeck), player->cardDeckOnTable);
+    putCardToDeck(player->cardDeckOnTable, drawCard(player->cardDeck));
 }
 
 int distributeCard(Game* game) {
@@ -144,7 +144,7 @@ int distributeCard(Game* game) {
     }
 
     for(int count = 0; count < game->join_num ; count++) {
-        splitCardDeck(game->players[count++].cardDeck, game->cardDeck, index, card_num);
+        splitCardDeck(game->players[count++]->cardDeck, game->cardDeck, index, card_num);
         index += card_num;
     }
 
@@ -158,17 +158,36 @@ int takeCardFromPlayersDeck(Game* game, Player* player) {
     }
 
     // 플레이어의 상태가 게임 중이 아니면 실패
-    if(player.info != PLAYER_GAMING) {
+    if(player->info != PLAYER_GAMING) {
         perror("playerStatus is not PLAYER_GAMING");
         return -1;
     }
 
     // 플레이어의 앞 카드들을 해당 플레이어에게 주고, 플레이어의 카드 덱에 추가
     for(int count = 0; count < game->join_num ; count++) {
-        if(game->players[count].id != player.id) {
-            
+        if(game->players[count]->id != player->id) {
+            putCardToDeck(player->cardDeck, game->players[count]->cardDeckOnTable); //문제가 있음....
         }
     }
+
+    return 0;
+}
+
+int takeCardFromTable(Game* game, Player* player) {
+    // 게임 상태가 시작 상태가 아니면 실패
+    if(game->status != GAME_START) {
+        perror("gameStatus is not GAME_START");
+        return -1;
+    }
+
+    // 플레이어의 상태가 게임 중이 아니면 실패
+    if(player->info != PLAYER_GAMING) {
+        perror("playerStatus is not PLAYER_GAMING");
+        return -1;
+    }
+
+    // 플레이어의 앞 카드들을 해당 플레이어에게 주고, 플레이어의 카드 덱에 추가
+    putCardDeckToDeck(player->cardDeck, game->cardDeckOnTable);
 
     return 0;
 }
