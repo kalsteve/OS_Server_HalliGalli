@@ -7,7 +7,7 @@
 
 #include "card.h"
 #include "player.h"
-#include "communication.h"
+#include "dataSerializer.h"
 
 #define MAX_PLAYER_NUM 6
 
@@ -17,6 +17,12 @@ typedef enum {
     GAME_START,    
     GAME_END
 } GAME_STATUS;
+
+typedef enum {
+    PLAYER_INIT,
+    PLAYER_READY,
+    PLAYER_GAMING
+}
 
 /**
  * 할리 갈리 게임의 정보를 담고 있는 구조체입니다.
@@ -29,12 +35,13 @@ typedef enum {
  * 
 */
 typedef struct _Gameinfo{
-    int playerNum;
-    int joinNum;
+    int player_num;
+    int join_num;
     Player* players;
     CardDeck cardDeck;
+    int player_turn;
     int turn;
-    GAME_STATUS gameStatus;
+    GAME_STATUS status;
 } GameInfo;
 
 typedef GameInfo* Game;
@@ -59,7 +66,13 @@ int joinPlayer(Game game, Player player);
  * @param player 게임을 시작할 플레이어
  * @return 실행 결과 (0: 성공, -1: 실패)
 */
-int readyPlayer(Game game, Player player);
+void readyPlayer(Game game, Player player);
+
+/**
+ * 게임이 준비가 됬는지 확인하는 함수
+ * @param game 게임의 정보를 담고 있는 구조체
+*/
+int isReady(Game game);
 
 /**
  * 할리갈리 게임을 시작하는 함수
@@ -88,7 +101,61 @@ void pLayerTurn(Game game, Player player);
  * @param game 게임의 정보를 담고 있는 구조체
  * @return 실행 결과 (0: 성공, -1: 실패)
 */
-void ringBell(Game game, Player player);
+int ringBell(Game game, Player player);
+
+/**
+ * 플레이어가 종을 친 것이 유효한지 확인하는 함수
+ * @param game 게임의 정보를 담고 있는 구조체
+ * @param player 종을 친 플레이어
+*/
+int isValidBell(Game game, Player player);
+
+/**
+ * 플레이어가 종을 친 것이 유효하지 않을 때
+ * @param game 게임의 정보를 담고 있는 구조체
+ * @param player 종을 친 플레이어
+*/
+void invalidBell(Game game, Player player);
+
+/**
+ * 플레이어가 종을 친 것이 유효할 때
+ * @param game 게임의 정보를 담고 있는 구조체
+ * @param player 종을 친 플레이어
+*/
+void validBell(Game game, Player player);
+
+/**
+ * 플레이어의 카드를 다른 플레이어에게 나눠주는 함수
+ * @param game 게임의 정보를 담고 있는 구조체
+ * @param player 카드를 나눠줄 플레이어
+ * @param target 카드를 받을 플레이어
+ * @param cardNum 카드를 나눠줄 개수
+ * @return 실행 결과 (0: 성공, -1: 실패)
+*/
+int giveCard(Game game, Player player, Player target, int cardNum);
+
+/**
+ * 앞에 놓인 카드를 가져오는 함수
+ * @param game 게임의 정보를 담고 있는 구조체
+ * @param player 카드를 가져올 플레이어
+ * @return 실행 결과 (0: 성공, -1: 실패)
+*/
+int takeCard(Game game, Player player);
+
+/**
+ * 플레이어가 자신의 턴에서 카드를 자신의 테이블 위에 놓는 함수
+ * @param game 게임의 정보를 담고 있는 구조체
+ * @param player 카드를 놓을 플레이어
+*/
+void putCardOnTable(Game game, Player player);
+
+/**
+ * 앞에 놓인 카드의 정보를 확인하는 함수
+ * @param game 게임의 정보를 담고 있는 구조체
+ * @param player 카드를 확인할 플레이어
+ * @return card 앞에 놓인 카드
+*/
+Card* checkCard(Game game, Player player);
 
 /**
  * 플레이어가 게임을 나갈 때
@@ -105,8 +172,15 @@ int leaveGame(Game game, Player player);
 */
 void loseGame(Game game, Player player);
 
-
+/**
+ * 게임을 종료하는 함수
+*/
 void endGame();
+
+/**
+ * 게임을 삭제하는 함수
+ * @param game 게임의 정보를 담고 있는 구조체
+*/
 void destroyGame(Game game);
 
 #endif
