@@ -22,10 +22,12 @@ typedef enum {
     PLAYER_INIT,
     PLAYER_READY,
     PLAYER_GAMING,
+    PLAYER_TURN,
     PLAYER_LOSE,
     PLAYER_WIN,
     PLAYER_DRAW,
-    PLAYER_BELL
+    PLAYER_BELL,
+    PLAYER_TURN_END
 
 } PLAYER_STATUS;
 
@@ -92,11 +94,10 @@ int startGame(Game* game);
 int distributeCard(Game* game);
 
 /**
- * 플레이어의 턴을 진행하는 함수
+ * 다음 플레이어의 턴으로 넘기는 함수
  * @param game 게임의 정보를 담고 있는 구조체
- * @param player 게임을 진행할 플레이어
 */
-void pLayerTurn(Game* game, Player* player);
+int playerTurnEnd(Game* game, Player* player)
 
 
 /**
@@ -111,7 +112,7 @@ int ringBell(Game* game, Player* player);
  * @param game 게임의 정보를 담고 있는 구조체
  * @param player 종을 친 플레이어
 */
-int isValidBell(Game** game, Player* player);
+int isValidBell(Game* game, Player* player);
 
 /**
  * 플레이어가 종을 친 것이 유효하지 않을 때
@@ -172,6 +173,13 @@ Card* checkCard(Game* game, Player* player);
  * 플레이어가 게임을 나갈 때
  * @param game 게임의 정보를 담고 있는 구조체
  * @param player 게임을 나갈 플레이어
+*/
+int isPlayerDeckEmpty(Player* player)
+
+/**
+ * 플레이어가 게임을 나갈 때
+ * @param game 게임의 정보를 담고 있는 구조체
+ * @param player 게임을 나갈 플레이어
  * @return 실행 결과 (0: 성공, -1: 실패)
  */
 int leaveGame(Game* game, Player* player);
@@ -193,5 +201,7 @@ void endGame();
  * @param game 게임의 정보를 담고 있는 구조체
 */
 void destroyGame(Game* game);
+
+
 
 #endif

@@ -12,8 +12,12 @@ Game* initGame() {
 
     // 게임 상태 초기화
     Game* game;
-    game = (Game *)malloc(sizeof(Game*));
+    game = (Game *)malloc(sizeof(Game));
     game->status = GAME_INIT;
+    game->join_num = 0;
+    game->player_turn = 0;
+    game->cardDeck = cardDeck;
+    game->players = player;
 
     return game;
 }
@@ -52,9 +56,11 @@ int readyPlayer(Game* game, Player* player) {
     // 플레이어의 준비 상태 변경
     for(int count = 0; count < game->join_num ; count++) {
 
-        if(game->players[count]->id == player->id) {
-            game->players[count]->info = PLAYER_READY;
+        if(game->players[count].id == player->id) {
+            game->players[count].info = PLAYER_READY;
         }
+
+        
     }
     
     return 0;
@@ -70,7 +76,7 @@ int isReady(Game* game) {
 
     for(int count = 0; count < game->join_num ; count++) {
 
-        if(game->players[count]->info != PLAYER_READY) {
+        if(game->players[count].info != PLAYER_READY) {
             return -1;
         }
     }
@@ -86,7 +92,7 @@ void startGame(Game* game) {
 
     for(int count = 0; count < game->join_num ; count++) {
         // 플레이어의 상태 변경
-        game->players[count]->info = PLAYER_GAMING;
+        game->players[count].info = PLAYER_GAMING;
     }
 
     // 플레이어에게 카드 배분
@@ -94,8 +100,8 @@ void startGame(Game* game) {
 
 }
 
-//
-int PlayerTurn(Game* game, Player* player) {
+// 플레이어의 턴을 종료하는 함수
+int playerTurnEnd(Game* game, Player* player) {
 
     // 게임 상태가 시작 상태가 아니면 실패
     if(game->status != GAME_START) {
@@ -109,9 +115,18 @@ int PlayerTurn(Game* game, Player* player) {
         return -1;
     }
 
+    // 플레이어의 턴이 아니면 실패
+    if(game->player_turn != player->id) {
+        perror("playerTurn is not player");
+        return -1;
+    }
+
+    
+
     // n번 플레이어의 턴
-    game->player_turn++;
-    game->player_turn %= game->join_num;
+    game->turn++;
+    game->player_turn = game->players[game->turn].id;
+    game->turn %= game->join_num;
 
     return 0;
 }
@@ -144,7 +159,7 @@ int distributeCard(Game* game) {
     }
 
     for(int count = 0; count < game->join_num ; count++) {
-        splitCardDeck(game->players[count++]->cardDeck, game->cardDeck, index, card_num);
+        splitCardDeck(game->players[count++].cardDeck, game->cardDeck, index, card_num);
         index += card_num;
     }
 
@@ -165,8 +180,8 @@ int takeCardFromPlayersDeck(Game* game, Player* player) {
 
     // 플레이어의 앞 카드들을 해당 플레이어에게 주고, 플레이어의 카드 덱에 추가
     for(int count = 0; count < game->join_num ; count++) {
-        if(game->players[count]->id != player->id) {
-            putCardToDeck(player->cardDeck, drawCard(game->players[count]->cardDeckOnTable));
+        if(game->players[count].id != player->id) {
+            putCardToDeck(player->cardDeck, drawCard(game->players[count].cardDeckOnTable));
         }
     }
 
@@ -188,8 +203,8 @@ int giveCardToPlayersDeck(Game* game, Player* player) {
 
     // 플레이어의 카드 덱의 카드들을 해당 플레이어의 앞 카드에 추가
     for(int count = 0; count < game->join_num; count++) {
-        if(game->players[count]->id != player->id) {
-            putCardToDeck(game->players[count]->cardDeck, drawCard(player->cardDeckOnTable));
+        if(game->players[count].id != player->id) {
+            putCardToDeck(game->players[count].cardDeck, drawCard(player->cardDeck));
         }
     }
 
@@ -228,5 +243,75 @@ int defeadPlayer(Game* game, Player* player) {
     // 플레이어의 상태 변경
     player->info = PLAYER_LOSE;
 
+    return 0;
+}
+
+
+Card readCardFromPlayersDeckOnTable(Player* player) {
+    // 플레이어의 앞 카드를 반환
+    return player->cardDeckOnTable->cards[0];
+}
+
+
+int isValidBell(Game* game, Player* player) {
+    int count[MAX_CARD_TYPE] = {0,};
+    int valid = 0;
+
+    for(int i = 0; i < game->join_num; i++) {
+        Card card = readCardFromPlayersDeckOnTable(&game->players[i]);
+        count[card.type] += card.volume;
+    }
+
+    for(int i = 0; i < MAX_CARD_TYPE; i++) {
+        if(count[i] == 5) {
+            valid = 1;
+        }
+    }
+    
+    return valid;
+}
+
+int ringBell(Game* game, Player* player) {
+    // 게임 상태가 시작 상태가 아니면 실패
+    if(game->status != GAME_START) {
+        perror("gameStatus is not GAME_START");
+        return -1;
+    }
+
+    // 플레이어의 상태가 게임 중이 아니면 실패
+    if(player->info != PLAYER_GAMING) {
+        perror("playerStatus is not PLAYER_GAMING");
+        return -1;
+    }
+
+    // 울린 벨이 유효한 벨이면
+    if(isValidBell(game, player)) {
+        // 테이블에 있는 가드를 자신의 덱으로 가져옴
+        takeCardFromPlayersDeck(game, player);
+        return 0;
+    }
+
+    // 유요한 벨이 아니면
+    // 플레이어의 덱을 상대방의 덱에 추가
+    giveCardToPlayersDeck(game, player);
+
+
+    return 0;
+}
+
+
+int checkGameState(Game* game, GAME_STATUS requiredState) {
+    if(game->status != requiredState) {
+        perror("Invalid game state");
+        return -1;
+    }
+    return 0;
+}
+
+int checkPlayerState(Player* player, PLAYER_STATUS requiredState) {
+    if(player->info != requiredState) {
+        perror("Invalid player state");
+        return -1;
+    }
     return 0;
 }

@@ -2,7 +2,7 @@
 #define __DATA_SERIALIZER_H__
 
 /**
- * @file communication.h
+ * @file dataSerializer.h
  * @brief 게임 진행에 필요한 데이터 양식인 json 형식의 문자열을 생성하는 함수들을 정의한 헤더 파일입니다.
  */
 
@@ -45,7 +45,9 @@ int deserializePlayerAction(char *data);
 /**
  * 보낼 데이터를 json 형식의 문자열로 변환하는 함수입니다.
 */
-char* serializeSendData(Game* game, Player* player);
+char* serializeSendData(Game* game, Player* player, int size);
+
+char* serializeSendAction(int player_id, int player_action, int size);
 
 
 

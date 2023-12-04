@@ -26,6 +26,7 @@ int createSocket(int socket_fd)
     if (socket_fd < 0 )
     {
         perror("socket");
+        fprintf(stderr, "Failed to initialize socket\n");
         exit(EXIT_FAILURE);
     }
     return socket_fd;
