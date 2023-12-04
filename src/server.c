@@ -88,8 +88,9 @@ int acceptSocket(int socket_fd, struct sockaddr_in *client_addr, int addr_len)
     return client_socket_fd;
 }
 
-int recvSocket(int socket, char *buffer, int buffer_len, int flags) {
-    int recv_len = recv(socket, buffer, buffer_len, flags);
+int recvSocket(int socket, char *buffer, int buffer_len) {
+    int recv_len = read(socket, buffer, buffer_len);;
+    
     if(recv_len < 0) {
         perror("recv");
         exit(EXIT_FAILURE);
@@ -97,8 +98,8 @@ int recvSocket(int socket, char *buffer, int buffer_len, int flags) {
     return recv_len;
 }
 
-int sendSocket(int socket, char *buffer, int buffer_len, int flags) {
-    int send_len = send(socket, buffer, buffer_len, flags);
+int sendSocket(int socket, char *buffer, int buffer_len) {
+    int send_len = write(socket, buffer, buffer_len);
     if(send_len < 0) {
         perror("send");
         exit(EXIT_FAILURE);

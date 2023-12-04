@@ -16,18 +16,36 @@
 #include "player.h"
 #include "card.h"
 
-/**
- * @brief 게임 시작을 알리는 json 형식의 문자열을 생성하는 함수입니다.
- * @param game 게임 정보
- * @return json 형식의 문자열
- */
-char* makeGameStartJson(Game *game);
+typedef struct __ReceiveActionFormat
+{
+    int player_id;
+    int player_action;
+} ReceiveDataFormat;
+
+typedef struct __SendDataFormat
+{
+    int player_id;
+    int card_volume;
+    int card_type;
+} SendDataFormat;
+
+typedef struct __SendActionFormat
+{
+    int player_id;
+    int player_action;
+} SendActionFormat;
+
+
 
 /**
- * @brief 플레이어의 턴을 알리는 json 형식의 문자열을 생성하는 함수입니다.
- * @param game 게임 정보
- * @return json 형식의 문자열
- */
+ * 플레이어의 행동을 json 형식의 문자열로 변환하는 함수입니다.
+*/
+int deserializePlayerAction(char *data);
+
+/**
+ * 보낼 데이터를 json 형식의 문자열로 변환하는 함수입니다.
+*/
+char* serializeSendData(Game* game, Player* player);
 
 
 

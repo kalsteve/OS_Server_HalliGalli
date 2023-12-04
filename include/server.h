@@ -48,8 +48,8 @@ int createSocket(int socket);
 int bindSocket(int socket_fd,struct sockaddr_in *serv_addr  , int addr_len, int port);
 int listenSocket(int socket, int backlog);
 int acceptSocket(int socket, struct sockaddr_in *cli_addr, int addr_len);
-int recvSocket(int socket, char *buffer, int buffer_len, int flags);
-int sendSocket(int socket, char *buffer, int buffer_len, int flags);
+int recvSocket(int socket, char *buffer, int buffer_len);
+int sendSocket(int socket, char *buffer, int buffer_len);
 int closeSocket(int socket);
 
 #endif

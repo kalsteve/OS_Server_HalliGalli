@@ -21,7 +21,12 @@ typedef enum {
 typedef enum {
     PLAYER_INIT,
     PLAYER_READY,
-    PLAYER_GAMING
+    PLAYER_GAMING,
+    PLAYER_LOSE,
+    PLAYER_WIN,
+    PLAYER_DRAW,
+    PLAYER_BELL
+
 } PLAYER_STATUS;
 
 /**
@@ -37,7 +42,7 @@ typedef enum {
 typedef struct _Gameinfo{
     int player_num;
     int join_num;
-    Player** players;
+    Player* players;
     CardDeck* cardDeck;
     int player_turn;
     int turn;
@@ -64,7 +69,7 @@ int joinPlayer(Game* game, Player* player);
  * @param player 게임을 시작할 플레이어
  * @return 실행 결과 (0: 성공, -1: 실패)
 */
-void readyPlayer(Game* game, Player* player);
+int readyPlayer(Game* game, Player* player);
 
 /**
  * 게임이 준비가 됬는지 확인하는 함수
@@ -133,12 +138,20 @@ void validBell(Game* game, Player* player);
 int giveCard(Game* game, Player* player, Player* target, int cardNum);
 
 /**
- * 앞에 놓인 카드를 가져오는 함수
+ * 플레이어가 자신의 턴에서 카드를 가져오는 함수
+ * @param game 게임의 정보를 담고 있는 구조체
+ * @param player 카드를 가져올 플레이어
+ * @param target 카드를 가져올 플레이어
+*/
+int giveCardToPlayersDeck(Game* game, Player* player);
+
+/**
+ * 플레이어가 자신의 턴에서 카드를 가져오는 함수
  * @param game 게임의 정보를 담고 있는 구조체
  * @param player 카드를 가져올 플레이어
  * @return 실행 결과 (0: 성공, -1: 실패)
 */
-int takeCard(Game* game, Player** player);
+int takeCardOnTable(Game* game, Player* player);
 
 /**
  * 플레이어가 자신의 턴에서 카드를 자신의 테이블 위에 놓는 함수

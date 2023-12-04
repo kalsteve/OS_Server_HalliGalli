@@ -8,6 +8,10 @@
 #include <pthread.h>
 #include <semaphore.h>
 
+#include "game.h"
+#include "dataSerializer.h"
+#include "server.h"
+
 
 #endif
 
