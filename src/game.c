@@ -211,13 +211,11 @@ int giveCardToPlayersDeck(Game* game, Player* player) {
     return 0;
 }
 
-int endGame(Game* game) {
+void endGame(Game* game) {
     // 게임 상태 변경
     game->status = GAME_END;
 
     destroyGame(game);
-
-    return 0;
 }
 
 int isPlayerDeckEmpty(Player* player) {
@@ -314,4 +312,17 @@ int checkPlayerState(Player* player, PLAYER_STATUS requiredState) {
         return -1;
     }
     return 0;
+}
+
+void destroyGame(Game* game) {
+    // 게임에 참여한 플레이어들의 메모리 해제
+    for(int count = 0; count < game->join_num ; count++) {
+        destroyPlayer(&game->players[count]);
+    }
+
+    // 게임에 사용된 카드 덱의 메모리 해제
+    destroyCardDeck(game->cardDeck);
+
+    // 게임의 메모리 해제
+    free(game);
 }

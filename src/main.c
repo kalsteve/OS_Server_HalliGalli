@@ -1,4 +1,4 @@
-#include "game.h"
+#include "main.h"
 
 #define PORT 4892
 
@@ -19,7 +19,7 @@ int main() {
     
     // 플레이어 대기
     while(game->status != GAME_INIT) {
-        pthread_create(&game_thread, NULL, initPlayer, (void *)socket_fd);
+        pthread_create(&game_thread, NULL, wait_Player, (void *)socket_fd);
         pthread_join(game_thread, (void*)&temp_player);
 
         joinPlayer(game, &temp_player);
@@ -88,7 +88,7 @@ void* playerJoinGame(void* player) {
                 pthread_mutex_lock(&g_mutex);
                 ringBell(game, in_game_player);
                 pthread_mutex_unlock(&g_mutex);
-                data = serializeSendData(in_game_player->id, in_game_player, MAX_BUFFER_SIZE);
+                data = serializeSendData(game, in_game_player, MAX_BUFFER_SIZE);
                 sendSocket(client_socket_fd, data, MAX_BUFFER_SIZE);
                 free(data);
             }
@@ -98,7 +98,7 @@ void* playerJoinGame(void* player) {
                 pthread_mutex_lock(&g_mutex);
                 putCardOnTable(game, in_game_player);
                 pthread_mutex_unlock(&g_mutex);
-                data = serializeSendData(in_game_player->id, in_game_player, MAX_BUFFER_SIZE);
+                data = serializeSendData(game, in_game_player, MAX_BUFFER_SIZE);
                 sendSocket(client_socket_fd, data, MAX_BUFFER_SIZE);
                 free(data);
             }

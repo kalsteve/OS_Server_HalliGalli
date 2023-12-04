@@ -11,8 +11,8 @@
 #include <string.h>
 #include <json-c/json.h>
 
-#include "server.h"
 #include "game.h"
+#include "server.h"
 #include "player.h"
 #include "card.h"
 
@@ -44,11 +44,12 @@ int deserializePlayerAction(char *data);
 
 /**
  * 보낼 데이터를 json 형식의 문자열로 변환하는 함수입니다.
+ * @param game 게임의 정보를 담고 있는 구조체
+ * @param player 플레이어의 정보를 담고 있는 구조체
 */
 char* serializeSendData(Game* game, Player* player, int size);
 
+
 char* serializeSendAction(int player_id, int player_action, int size);
-
-
 
 #endif

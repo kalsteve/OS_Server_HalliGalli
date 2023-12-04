@@ -1,6 +1,14 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
+/**
+ * @file player.h
+ * @brief 플레이어의 정보를 담고 있는 구조체를 정의한 헤더 파일입니다.
+ * 
+ */
+
+#include "card.h"
+
 typedef struct _Player{
     int id;
     int cardNum;
@@ -13,6 +21,5 @@ Player* initPlayer();
 Player* createPlayer(int id);
 Player* addPlayer(Player* players, Player* player);
 void destroyPlayer(Player* player);
-void destroyPlayers(Player* players);
 
 #endif

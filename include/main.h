@@ -9,9 +9,12 @@
 #include <semaphore.h>
 
 #include "game.h"
+#include "player.h"
 #include "dataSerializer.h"
 #include "server.h"
 
-
+void* wait_Player(void* socket);
+void* getPlayerAction(void* socket);
+void* playerJoinGame(void* player);
 #endif
 

@@ -7,7 +7,6 @@
 
 #include "card.h"
 #include "player.h"
-#include "dataSerializer.h"
 
 #define MAX_PLAYER_NUM 6
 
@@ -84,7 +83,7 @@ int isReady(Game* game);
  * @param game 게임의 정보를 담고 있는 구조체
  * @return 실행 결과 (0: 성공, -1: 실패)
 */
-int startGame(Game* game);
+void startGame(Game* game);
 
 /**
  * 플레이어에게 카드를 배분하는 함수
@@ -97,7 +96,7 @@ int distributeCard(Game* game);
  * 다음 플레이어의 턴으로 넘기는 함수
  * @param game 게임의 정보를 담고 있는 구조체
 */
-int playerTurnEnd(Game* game, Player* player)
+int playerTurnEnd(Game* game, Player* player);
 
 
 /**
@@ -174,7 +173,7 @@ Card* checkCard(Game* game, Player* player);
  * @param game 게임의 정보를 담고 있는 구조체
  * @param player 게임을 나갈 플레이어
 */
-int isPlayerDeckEmpty(Player* player)
+int isPlayerDeckEmpty(Player* player);
 
 /**
  * 플레이어가 게임을 나갈 때
