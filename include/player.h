@@ -4,8 +4,8 @@
  * 
  */
 
-#ifndef __PLAYER_H__
-#define __PLAYER_H__
+#ifndef _PLAYER_H_
+#define _PLAYER_H_
 
 
 #include "card.h"
