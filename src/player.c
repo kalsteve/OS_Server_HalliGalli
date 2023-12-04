@@ -1,8 +1,4 @@
-/**
- * @file player.c
-*/
 #include "player.h"
-
 
 Player* initPlayer() {
     Player* player = (Player*)malloc(sizeof(Player));

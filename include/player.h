@@ -1,11 +1,12 @@
-#ifndef __PLAYER_H__
-#define __PLAYER_H__
-
 /**
  * @file player.h
  * @brief 플레이어의 정보를 담고 있는 구조체를 정의한 헤더 파일입니다.
  * 
  */
+
+#ifndef __PLAYER_H__
+#define __PLAYER_H__
+
 
 #include "card.h"
 
