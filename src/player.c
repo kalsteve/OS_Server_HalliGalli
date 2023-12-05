@@ -1,22 +1,22 @@
 #include "player.h"
 
-Player* initPlayer() {
-    Player* player = (Player*)malloc(sizeof(Player));
-    player->id = 0;
-    player->cardNum = 0;
-    player->info = PLAYER_INIT;
-    player->cardDeck = initCardDeck();
-    player->cardDeckOnTable = initCardDeck();
+Player* initPlayer(int id, int card_num) {
+    Player* player = createPlayer(id, card_num);
     return player;
 }
 
-Player* createPlayer(int id) {
+Player* createPlayer(int id, int card_num) {
     Player* player = (Player*)malloc(sizeof(Player));
     player->id = id;
     player->cardNum = 0;
     player->info = PLAYER_INIT;
-    player->cardDeck = initCardDeck();
-    player->cardDeckOnTable = initCardDeck();
+    player->cardDeck = initCardDeck(MAX_CARD_NUM);
+    player->cardDeckOnTable = initCardDeck(MAX_CARD_NUM);
+    return player;
+}
+
+Player* setPlayerId(Player* player, int id) {
+    player->id = id;
     return player;
 }
 

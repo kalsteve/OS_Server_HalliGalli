@@ -9,6 +9,7 @@
 
 
 #include "card.h"
+#include "game.h"
 
 typedef struct _Player{
     int id;
@@ -18,8 +19,9 @@ typedef struct _Player{
     CardDeck* cardDeckOnTable; // 테이블에 내려놓은 카드 덱
 } Player;
 
-Player* initPlayer();
-Player* createPlayer(int id);
+Player* initPlayer(int id, int card_num);
+Player* createPlayer(int id, int card_num);
+Player* setPlayerId(Player* player, int id);
 Player* addPlayer(Player* players, Player* player);
 void destroyPlayer(Player* player);
 

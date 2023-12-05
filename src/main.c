@@ -47,12 +47,13 @@ int main() {
 }
 
 void* wait_Player(void* socket) {
-    Player* player = initPlayer();
+    Player* player;
     int server_sock_fd = (int)socket;
     int client_socket_fd;
     struct sockaddr_in client_addr;
     
     client_socket_fd = acceptSocket(server_sock_fd, &client_addr, sizeof(client_addr));
+    player = initPlayer(client_socket_fd, MAX_CARD_NUM);
 
     player->id = client_socket_fd;
 

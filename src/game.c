@@ -121,8 +121,6 @@ int playerTurnEnd(Game* game, Player* player) {
         return -1;
     }
 
-    
-
     // n번 플레이어의 턴
     game->turn++;
     game->player_turn = game->players[game->turn].id;
