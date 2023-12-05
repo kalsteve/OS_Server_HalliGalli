@@ -8,7 +8,8 @@ Game* initGame() {
     // 카드 덱 초기화
     CardDeck* cardDeck = initCardDeck(MAX_CARD_NUM);
     // 플레이어 초기화
-    Player* player = initPlayer();
+    Player* player = initPlayer(0, MAX_CARD_NUM);
+
 
     // 게임 상태 초기화
     Game* game;
@@ -35,6 +36,8 @@ int joinPlayer(Game* game, Player* player) {
 
     // 게임에 플레이어 추가
     addPlayer(game->players, player);
+
+    player->info = PLAYER_INIT;
     // 게임에 참여한 플레이어 수 증가
     game->join_num++;
     return 0;
@@ -143,6 +146,8 @@ int putCardOnTable(Game* game, Player* player) {
     }
 
     putCardToDeck(player->cardDeckOnTable, drawCard(player->cardDeck));
+
+    return 0;
 }
 
 int distributeCard(Game* game) {
@@ -160,6 +165,8 @@ int distributeCard(Game* game) {
         splitCardDeck(game->players[count++].cardDeck, game->cardDeck, index, card_num);
         index += card_num;
     }
+
+    return 0;
 
 }
 

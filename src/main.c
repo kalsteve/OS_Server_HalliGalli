@@ -1,3 +1,6 @@
+
+
+
 #include "main.h"
 
 #define PORT 4892
@@ -6,13 +9,14 @@ Game* game;
 pthread_mutex_t g_mutex;
 
 int main() {
+    game = initGame();
     Player temp_player;
     
     int socket_fd = initSocket(PORT, MAX_CLIENT_NUM);
     pthread_t game_thread;
     pthread_t player_thread[MAX_CLIENT_NUM];
 
-    game = initGame();
+    
     
     pthread_mutex_init(&g_mutex, NULL);
     

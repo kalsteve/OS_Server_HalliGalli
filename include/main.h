@@ -7,7 +7,9 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <netinet/in.h> // for sockaddr_in
 
+#include "card.h"
 #include "player.h"
 #include "game.h"
 #include "dataSerializer.h"

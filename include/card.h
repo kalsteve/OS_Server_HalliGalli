@@ -6,7 +6,6 @@
  * @file card.h
  * @brief This file contains the declaration of the card struct and its functions.
 */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,15 +31,6 @@ typedef enum {
     FOUR_FRUIT = 2,
     FIVE_FRUIT = 1
 } CARD_VOLUME;
-
-//카드 종류별 갯수의 배열
-const int CARD_VOLUMES[] = {
-    ONE_FRUIT, 
-    TWO_FRUIT, 
-    THREE_FRUIT, 
-    FOUR_FRUIT, 
-    FIVE_FRUIT
-};
 
 typedef struct _Card{
     int id; //카드의 고유번호

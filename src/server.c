@@ -2,6 +2,9 @@
  * socket.c - 소켓 프로그래밍
  * 
 */
+
+
+
 #include "server.h"
 
 int initSocket(const int port, const int client_num)
@@ -9,8 +12,8 @@ int initSocket(const int port, const int client_num)
     int server_socket_fd;           // 서버 소켓 파일 디스크립터
     struct sockaddr_in serv_addr;
     
-    
     server_socket_fd = createSocket(server_socket_fd);
+    memset(&serv_addr, 0, sizeof(serv_addr)); //소켓 구조체 초기화
     server_socket_fd = bindSocket(server_socket_fd, &serv_addr, sizeof(serv_addr), port);
 
     return server_socket_fd;
@@ -33,10 +36,9 @@ int createSocket(int socket_fd)
 }
 
 // 소켓 연결 대기 함수
-int bindSocket(int socket_fd, struct sockaddr_in *serv_addr, int addr_len, int port)
+int bindSocket(int socket_fd, struct sockaddr_in* serv_addr, int addr_len, int port)
 {
-    memset(&serv_addr, 0, sizeof(serv_addr)); //소켓 구조체 초기화
-
+    // 소켓 설정
     serv_addr->sin_family = AF_INET; // IPv4
     serv_addr->sin_addr.s_addr = htonl(INADDR_ANY); // 32bit IPv4 주소
     serv_addr->sin_port = htons(port); // 16bit TCP/UDP 포트번호

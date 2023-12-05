@@ -7,9 +7,11 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "card.h"
-#include "game.h"
 
 typedef struct _Player{
     int id;

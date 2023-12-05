@@ -1,8 +1,18 @@
 /**
  * 카드 관련 함수
 */
+
+
 #include "card.h"
 
+//카드 종류별 갯수의 배열
+const int CARD_VOLUMES[] = {
+    ONE_FRUIT, 
+    TWO_FRUIT, 
+    THREE_FRUIT, 
+    FOUR_FRUIT, 
+    FIVE_FRUIT
+};
 
 CardDeck* initCardDeck(int card_num) {
     int card_id = 0;

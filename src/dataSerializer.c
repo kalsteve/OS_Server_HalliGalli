@@ -1,3 +1,4 @@
+
 #include "dataSerializer.h"
 
 int deserializePlayerAction(char *data) {

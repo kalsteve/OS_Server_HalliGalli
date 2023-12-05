@@ -14,9 +14,17 @@
         "json.h": "c",
         "pthread.h": "c",
         "game.h": "c",
-        "player.h": "c"
+        "player.h": "c",
+        "dataserializer.h": "c"
     },
     "C_Cpp.codeAnalysis.clangTidy.enabled": true,
     "C_Cpp.codeAnalysis.runAutomatically": true,
-    "C_Cpp.default.cStandard": "c17"
+    "C_Cpp.default.cStandard": "c17",
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/tell/OS_Project/output",
+            "binaryPath": "/home/tell/OS_Project/output/main",
+            "binaryArgs": []
+        }
+    ]
 }
