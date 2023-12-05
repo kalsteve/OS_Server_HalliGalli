@@ -15,6 +15,7 @@ int initSocket(const int port, const int client_num)
     server_socket_fd = createSocket(server_socket_fd);
     memset(&serv_addr, 0, sizeof(serv_addr)); //소켓 구조체 초기화
     server_socket_fd = bindSocket(server_socket_fd, &serv_addr, sizeof(serv_addr), port);
+    server_socket_fd = listenSocket(server_socket_fd, client_num);
 
     return server_socket_fd;
 }
@@ -32,6 +33,7 @@ int createSocket(int socket_fd)
         fprintf(stderr, "Failed to initialize socket\n");
         exit(EXIT_FAILURE);
     }
+
     return socket_fd;
 }
 
@@ -44,11 +46,9 @@ int bindSocket(int socket_fd, struct sockaddr_in* serv_addr, int addr_len, int p
     serv_addr->sin_port = htons(port); // 16bit TCP/UDP 포트번호
 
     // 소켓에 주소 할당
-    socket_fd = bind(socket_fd, (struct sockaddr *)serv_addr, addr_len);
-
-    // 소켓에 주소 할당에 실패한 경우
-    if (socket_fd < 0)
+    if (bind(socket_fd, (struct sockaddr *)serv_addr, addr_len) < 0)
     {
+        // 소켓에 주소 할당에 실패한 경우
         perror("bind");
         exit(EXIT_FAILURE);
     }
@@ -60,11 +60,9 @@ int bindSocket(int socket_fd, struct sockaddr_in* serv_addr, int addr_len, int p
 int listenSocket(int socket_fd, int client_num)
 {
     // 연결 요청 대기 큐 생성
-    socket_fd = listen(socket_fd, client_num);
-
-    // 연결 요청 대기 큐 생성에 실패한 경우
-    if (socket_fd < 0)
+    if (listen(socket_fd, client_num) < 0)
     {
+        // 연결 요청 대기 큐 생성에 실패한 경우
         perror("listen");
         exit(EXIT_FAILURE);
     }

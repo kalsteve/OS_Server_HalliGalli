@@ -77,14 +77,19 @@ int isReady(Game* game) {
         return -1;
     }
 
+    if (game->join_num < 1) {
+        return 0;
+    }
+    
+
     for(int count = 0; count < game->join_num ; count++) {
 
-        if(game->players[count].info != PLAYER_READY) {
-            return -1;
+        if(game->players[count].info == PLAYER_READY) {
+            return 0;
         }
     }
     
-    return 0;
+    return 1;
 }
 
 

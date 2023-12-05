@@ -20,6 +20,7 @@ typedef enum {
 typedef enum {
     PLAYER_INIT,
     PLAYER_READY,
+    PLAYER_START,
     PLAYER_GAMING,
     PLAYER_TURN,
     PLAYER_LOSE,

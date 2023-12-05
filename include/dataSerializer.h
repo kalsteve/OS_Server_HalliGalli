@@ -36,6 +36,13 @@ typedef struct __SendActionFormat
     int player_action;
 } SendActionFormat;
 
+typedef enum {
+    NOTTHING_PLAYER_ACTION,
+    ALL_PLAYER_NOT_READY,
+    PLAYER_NOT_READY
+} SEND_ACTION;
+
+
 
 
 /**

@@ -7,7 +7,7 @@
 CC = gcc
 
 # define any compile-time flags
-CFLAGS	:= -Wall -Wextra -g
+CFLAGS	:= -Wall -Wextra -fdiagnostics-color=always -g 
 
 # define library paths in addi#
 # 'make'        build executable file 'main'
@@ -18,7 +18,7 @@ CFLAGS	:= -Wall -Wextra -g
 CC = gcc
 
 # define any compile-time flags
-CFLAGS	:= -Wall -Wextra -g
+CFLAGS	:= -Wall -Wextra -g 
 
 # define library paths in addition to /usr/lib
 #   if I wanted to include libraries not in /usr/lib I'd specify

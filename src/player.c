@@ -16,8 +16,6 @@ Player* createPlayer(int id, int card_num) {
     player->id = id;
     player->cardNum = 0;
     player->info = 0;
-    player->cardDeck = initCardDeck(MAX_CARD_NUM);
-    player->cardDeckOnTable = initCardDeck(MAX_CARD_NUM);
     return player;
 }
 
@@ -27,7 +25,7 @@ Player* setPlayerId(Player* player, int id) {
 }
 
 Player* addPlayer(Player* players, Player* player) {
-    players = (Player*)realloc(players, sizeof(Player) * 2);
+    players = (Player*)realloc(players, sizeof(Player) * (player->id + 1));
     setPlayerId(&players[player->id], player->id);
     return players;
 }

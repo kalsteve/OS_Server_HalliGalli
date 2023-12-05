@@ -18,5 +18,6 @@
 void* wait_Player(void* socket);
 void* getPlayerAction(void* socket);
 void* playerJoinGame(void* player);
+void* sendALLPlayerAction(void* arg);
 #endif
 

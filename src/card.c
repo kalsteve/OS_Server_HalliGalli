@@ -2,7 +2,7 @@
  * 카드 관련 함수
 */
 
-
+#include <malloc.h>
 #include "card.h"
 
 //카드 종류별 갯수의 배열
@@ -17,15 +17,16 @@ const int CARD_VOLUMES[] = {
 CardDeck* initCardDeck(int card_num) {
     int card_id = 0;
     CardDeck *cardDeck;
+    
 
     // 카드 덱 생성
     cardDeck = createCardDeck(card_num);
 
     // 카드 초기 설정 알고리즘
-    for(int volume = 0; volume < MAX_CARD_VOLUME; volume++) {          // 카드의 과일 갯수
+    for(CARD_VOLUME volume = 0; volume < MAX_CARD_VOLUME; volume++) {          // 카드의 과일 갯수
         for(int repeat = 0; repeat < CARD_VOLUMES[volume]; repeat++) { // 카드의 과일 개수만큼 반복
-            for(int type = 0; type < MAX_CARD_TYPE; type++) {           // 카드의 종류
-                setCard(&cardDeck->cards[card_num], card_id, type, volume);
+            for(CARD_TYPE type = 0; type < MAX_CARD_TYPE; type++) {           // 카드의 종류
+                setCard(&cardDeck->cards[card_id], card_id, type, volume);
                 card_id++;
             }
         }
@@ -39,10 +40,19 @@ CardDeck* initCardDeck(int card_num) {
 
 CardDeck* createCardDeck(int card_num) {
     // 카드, 덱 공간 할당
-    CardDeck *cardDeck = (CardDeck *)malloc(sizeof(CardDeck));
-    Card *new_cards = (Card *)malloc(sizeof(Card) * card_num);
-    
-    
+    CardDeck *cardDeck;
+    // 카드 배열 공간 할당
+    Card *new_cards;
+
+    cardDeck = malloc(sizeof(CardDeck));
+    new_cards = malloc(sizeof(Card)*card_num);
+    //malloc_trim(0);
+
+    if(cardDeck == NULL || new_cards == NULL) {
+        perror("in CardDeck malloc error");
+        exit(1);
+    }
+
     // 카드 덱 생성
     cardDeck->card_num = card_num;
     cardDeck->cards = new_cards;

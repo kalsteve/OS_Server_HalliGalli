@@ -15,7 +15,8 @@
         "pthread.h": "c",
         "game.h": "c",
         "player.h": "c",
-        "dataserializer.h": "c"
+        "dataserializer.h": "c",
+        "malloc.h": "c"
     },
     "C_Cpp.codeAnalysis.clangTidy.enabled": true,
     "C_Cpp.codeAnalysis.runAutomatically": true,
@@ -24,6 +25,11 @@
         {
             "cwd": "/home/tell/OS_Project/output",
             "binaryPath": "/home/tell/OS_Project/output/main",
+            "binaryArgs": []
+        },
+        {
+            "cwd": "/home/kota/OS_Project/output",
+            "binaryPath": "/home/kota/OS_Project/output/main",
             "binaryArgs": []
         }
     ]
