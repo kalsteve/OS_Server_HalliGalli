@@ -19,18 +19,15 @@ int main() {
     
     pthread_mutex_init(&g_mutex, NULL);
     
+    pthread_create(&game_thread, NULL, wait_Player, (void *)socket_fd);
     
     // 플레이어 대기
     while(game->status == GAME_INIT) {
-        pthread_create(&game_thread, NULL, wait_Player, (void *)socket_fd);
-    
         // 플레이어가 게임을 시작하면 시작
         if(isReady(game)) {
                 game->status = GAME_START;
                 break;
         }
-            
-        pthread_create(&player_thread, NULL, sendALLPlayerAction, NULL);
     }
 
     startGame(game);
@@ -55,9 +52,16 @@ void* wait_Player(void* socket) {
     int client_socket_fd;
     struct sockaddr_in client_addr;
     pthread_t player_thread;
-    
+
+
     client_socket_fd = acceptSocket(server_sock_fd, &client_addr, sizeof(client_addr));
     player = initPlayer(client_socket_fd, MAX_CARD_NUM);
+    
+    if(game->status != GAME_INIT) {
+        perror("gameStatus is not GAME_INIT");
+        
+        return NULL;
+    }
 
     pthread_mutex_lock(&g_mutex);
     joinPlayer(game, player);
@@ -65,31 +69,42 @@ void* wait_Player(void* socket) {
 
     player->id = client_socket_fd;
 
-    while (1)
-    {
-        // 플레이어가 게임에 참여 여부 확인
-        pthread_create(&player_thread, NULL, getPlayerAction, (void*)client_socket_fd);
-        if(pthread_join(player_thread, NULL) == PLAYER_READY) {
-            pthread_mutex_lock(&g_mutex);
-            readyPlayer(game, player);
-            pthread_mutex_lock(&g_mutex);
-            break;
-        }
-    }
-
     // 클라이언트 소켓 반환
     return NULL;
 }
 
 void* getPlayerAction(void* socket) {
     int client_socket_fd = *((int*)socket);
+    Player* player;
     char* data;
     int* action;
+    pthread_t player_thread;
     
     recvSocket(client_socket_fd, data, MAX_BUFFER_SIZE);
     *action = deserializePlayerAction(data);
+
+    // 플레이어 구하기
+    for(int i = 0; i < game->join_num; i++) {
+        if(game->players[i].id == client_socket_fd) {
+            player = &game->players[i];
+        }
+    }
+
+    if(*action == PLAYER_READY) {
+        pthread_mutex_lock(&g_mutex);
+        readyPlayer(game, player);
+        pthread_mutex_unlock(&g_mutex);
+    }
+
+    if(*action == PLAYER_START) {
+        pthread_mutex_lock(&g_mutex);
+        pthread_create(&player_thread, NULL, sendALLPlayerAction, (void*)PLAYER_START);
+        pthread_mutex_unlock(&g_mutex);
+    }
+
     
-    return (void*)action;
+    
+    return NULL;
 }
 
 void* playerJoinGame(void* player) {
@@ -152,18 +167,25 @@ void* playerJoinGame(void* player) {
 
 void* sendALLPlayerAction(void* arg) {
     char* data;
+    PLAYER_STATUS player_status = *(PLAYER_STATUS*)arg;
 
-    for(int i = 0; i < game->join_num; i++) {
-        if(game->players[i].info == PLAYER_READY) {
-            data = serializeSendAction(game->players[i].id , PLAYER_NOT_READY, MAX_BUFFER_SIZE);
-            sendSocket(game->players[i].id , data, MAX_BUFFER_SIZE);
-        }
+    // 플레이어가 스타트를 눌렀을 때
+    if(player_status == PLAYER_START) {
+        for(int i = 0; i < game->join_num; i++) {
+            if(game->players[i].info == PLAYER_READY) {
+                data = serializeSendAction(game->players[i].id , PLAYER_NOT_READY, MAX_BUFFER_SIZE);
+                sendSocket(game->players[i].id , data, MAX_BUFFER_SIZE);
+            }
 
-        if(game->players[i].info == PLAYER_INIT) {
-            data = serializeSendAction(game->players[i].id , ALL_PLAYER_NOT_READY, MAX_BUFFER_SIZE);
-            sendSocket(game->players[i].id , data, MAX_BUFFER_SIZE);
+            if(game->players[i].info == PLAYER_INIT) {
+                data = serializeSendAction(game->players[i].id , ALL_PLAYER_NOT_READY, MAX_BUFFER_SIZE);
+                sendSocket(game->players[i].id , data, MAX_BUFFER_SIZE);
+            }
         }
     }
+
+
+    
     
     return NULL;
 }
