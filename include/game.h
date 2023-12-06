@@ -17,7 +17,9 @@ typedef enum {
     GAME_END
 } GAME_STATUS;
 
+
 typedef enum {
+    PLAYER_NULL,
     PLAYER_INIT,
     PLAYER_READY,
     PLAYER_START,
@@ -27,9 +29,11 @@ typedef enum {
     PLAYER_WIN,
     PLAYER_DRAW,
     PLAYER_BELL,
-    PLAYER_TURN_END
-
+    PLAYER_TURN_END,
+    PLAYER_DENY,
+    PLAYER_NOT_WANT
 } PLAYER_STATUS;
+
 
 /**
  * 할리 갈리 게임의 정보를 담고 있는 구조체입니다.

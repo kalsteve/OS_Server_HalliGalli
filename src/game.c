@@ -81,10 +81,12 @@ int isReady(Game* game) {
         return 0;
     }
     
+    //test
+    return 1;
 
     for(int count = 0; count < game->join_num ; count++) {
 
-        if(game->players[count].info == PLAYER_READY) {
+        if(game->players[count].info != PLAYER_READY) {
             return 0;
         }
     }
@@ -158,7 +160,6 @@ int putCardOnTable(Game* game, Player* player) {
 int distributeCard(Game* game) {
     int index = 0;
     int card_num = MAX_CARD_NUM / game->join_num;
-    int max_index = MAX_CARD_NUM - card_num;
 
     // 게임 상태가 시작 상태가 아니면 실패
     if(game->status != GAME_START) {
