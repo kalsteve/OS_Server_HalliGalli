@@ -26,6 +26,11 @@ int createSocket(int socket_fd)
     // 소켓 생성
     socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 
+    if(setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &(int){1}, sizeof(int)) < 0) {
+        perror("setsockopt(SO_REUSEADDR) failed");
+        exit(EXIT_FAILURE);
+    }
+
     // 소켓 생성에 실패한 경우
     if (socket_fd < 0 )
     {
@@ -51,6 +56,7 @@ int bindSocket(int socket_fd, struct sockaddr_in* serv_addr, int addr_len, int p
         // 소켓에 주소 할당에 실패한 경우
         perror("bind");
         exit(EXIT_FAILURE);
+        
     }
 
     return socket_fd;
@@ -90,7 +96,7 @@ int acceptSocket(int socket_fd, struct sockaddr_in *client_addr, int addr_len)
 }
 
 int recvSocket(int socket, char *buffer, int buffer_len) {
-    int recv_len = read(socket, buffer, buffer_len);;
+    int recv_len = read(socket, buffer, buffer_len);
     
     if(recv_len < 0) {
         perror("recv");
