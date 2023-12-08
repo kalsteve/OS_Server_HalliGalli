@@ -58,6 +58,6 @@ int deserializePlayerAction(char *data);
 char* serializeSendData(Game* game, Player* player, int size);
 
 
-char* serializeSendAction(int player_id, int player_action, int size);
+char* serializeSendAction(int player_id, int player_turn,int player_action, int size);
 
 #endif

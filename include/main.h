@@ -21,5 +21,6 @@ void* playerJoinGame(void* player);
 void* sendALLPlayerAction(void* player);
 void* sendPlayerAction(void* player);
 void* sendPlayerData(void* player);
+void systemMessage(char* message);
 #endif
 
