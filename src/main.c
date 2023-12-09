@@ -1,6 +1,6 @@
 #include "main.h"
 
-#define PORT 4892
+#define PORT 4848
 
 Game* game;
 struct sockaddr_in client_addr;
@@ -57,7 +57,9 @@ int main() {
 
     // 게임 진행
     systemMessage("game start");
-    while(game->status != GAME_END) {}
+    while(game->status != GAME_END) {
+        sleep(10);
+    }
 
     // 게임 종료
     systemMessage("game end");
@@ -112,11 +114,12 @@ void* wait_Player(void* socket) {
 void* getPlayerAction(void* socket) {
     int client_socket_fd = *((int*)socket);
     Player* player;
-    char* data = (char*)malloc(sizeof(char) * MAX_BUFFER_SIZE);
+    char* data = (char*)malloc( sizeof(char) * MAX_BUFFER_SIZE);
     int action;
     pthread_t player_thread;
     
     recvSocket(client_socket_fd, data, MAX_BUFFER_SIZE);
+    printf("%s",data);
     action = deserializePlayerAction(data);
     free(data);
 
@@ -153,12 +156,13 @@ void* getPlayerAction(void* socket) {
 void* playerJoinGame(void* player) {
     Player* in_game_player = (Player*)player;
     int client_socket_fd = in_game_player->id;
-    char* data = (char*)malloc(sizeof(char) * MAX_BUFFER_SIZE);
+    char* data;
     int action;
 
     while(1) {
         // 플레이어 턴이면
         if(game->player_turn == in_game_player->id){
+            data = (char*)malloc(sizeof(char) * MAX_BUFFER_SIZE);
             recvSocket(client_socket_fd, data, MAX_BUFFER_SIZE);
             action = deserializePlayerAction(data);
             free(data);
@@ -263,10 +267,6 @@ void* sendALLPlayerAction(void* arg) {
             
         }
 
-        // test
-        data = serializeSendAction(game->players[0].id , game->player_turn, PLAYER_TURN, MAX_BUFFER_SIZE);
-        sendSocket(game->player_turn , data, MAX_BUFFER_SIZE);
-        free(data);
     }
 
 

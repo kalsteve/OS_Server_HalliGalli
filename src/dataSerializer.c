@@ -12,7 +12,7 @@ int deserializePlayerAction(char *data) {
 }
 
 char* serializeSendData(Game* game, Player* player, int size) {
-    char* data = (char*)malloc(sizeof(char) * size);
+    char* data = (char*)calloc(size, sizeof(char));  // 메모리 할당 및 초기화
     json_object *jobj = json_object_new_object();
     json_object *jarray = json_object_new_array();
 
@@ -26,11 +26,9 @@ char* serializeSendData(Game* game, Player* player, int size) {
         json_object_array_add(jarray, jplayer);
     }
 
-    json_object_object_add(jobj, "players_data", json_object_new_int(player->id));
+    json_object_object_add(jobj, "all_players_data", jarray);
 
     strcat(data, json_object_to_json_string(jobj)); // 문자열 복사
-
-    json_object_put(jarray); // JSON 객체 메모리 해제
 
     return data;
 }

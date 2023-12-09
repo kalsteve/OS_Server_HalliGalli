@@ -231,9 +231,9 @@ void endGame(Game* game) {
 
 int isPlayerDeckEmpty(Player* player) {
     if(player->cardDeck->card_num == 0) {
-        return 0;
+        return 1;
     }
-    return -1;
+    return 0;
 }
 
 int defeadPlayer(Game* game, Player* player) {
