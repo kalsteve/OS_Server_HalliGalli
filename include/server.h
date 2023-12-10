@@ -39,7 +39,7 @@
 #include <string.h>     // for memset()
 #include <errno.h>      // for errno
 
-#define MAX_BUFFER_SIZE 1024
+#define MAX_BUFFER_SIZE 128
 #define MAX_CLIENT_NUM 6
 
 

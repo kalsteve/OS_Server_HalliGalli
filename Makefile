@@ -4,7 +4,7 @@
 #
 
 # define the C compiler to use
-CC = gcc
+CC = /usr/bin/aarch64-linux-gnu-gcc
 
 # define any compile-time flags
 CFLAGS	:= -Wall -Wextra -fdiagnostics-color=always -g 
