@@ -28,12 +28,17 @@ Player* setPlayerId(Player* player, int id) {
 }
 
 Player* addPlayer(Player* players, Player* player) {
-    static int player_num = 1;
-    players = (Player*)realloc(players, sizeof(Player) * player_num);
-    players[player_num - 1] = *player;
-    free(player);
+    static int player_num = 0;
+    Player* new_players = (Player*)malloc(sizeof(Player) * (player_num + 1));
+    for (int i = 0; i <= player_num; i++) {
+        new_players[i] = players[i];
+    }
+    new_players[player_num] = *player;    
+    if(player != NULL) {
+        free(player);
+    }
     player_num++;
-    return players;
+    return new_players;
 }
 
 void destroyPlayer(Player* player) {

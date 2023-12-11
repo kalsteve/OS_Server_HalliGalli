@@ -35,7 +35,7 @@ int joinPlayer(Game* game, Player* player) {
     }
 
     // 게임에 플레이어 추가
-    addPlayer(game->players, player);
+    game->players = addPlayer(game->players, player);
 
     player->info = PLAYER_INIT;
     // 게임에 참여한 플레이어 수 증가

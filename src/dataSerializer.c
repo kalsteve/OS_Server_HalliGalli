@@ -5,16 +5,18 @@
 int deserializePlayerAction(char *data) {
     int temp;
     json_object *action;
-    json_object *jobj = json_tokener_parse(data);
+    json_tokener *tok = json_tokener_new();
+    json_object *jobj = json_tokener_parse_ex(tok, data, 1024);
 
     action = json_object_object_get(jobj, "player_action");
     temp = json_object_get_int(action);
 
-    realloc(jobj, 0);
-
+    
 
     return temp;
 }
+
+
 
 char* serializeSendData(Game* game, Player* player, int size) {
     char* data = (char*)calloc(size, sizeof(char));  // 메모리 할당 및 초기화
@@ -34,20 +36,23 @@ char* serializeSendData(Game* game, Player* player, int size) {
 
     json_object_object_add(jobj, "all_players_data", jarray);
 
-    strcat(data, json_object_to_json_string(jobj)); // 문자열 복사
+    strncpy(data, json_object_to_json_string(jobj), size); // 문자열 복사
 
     return data;
 }
 
+
+
 char* serializeSendAction(int player_id, int player_turn,int player_action, int size) {
     char* data = (char*)calloc(size, sizeof(char));
     memset(data, 0, size);  // 메모리 할당 및 초기화
+    
     json_object *jobj = json_object_new_object();
     json_object_object_add(jobj, "player_id", json_object_new_int(player_id));
     json_object_object_add(jobj, "player_turn", json_object_new_int(player_turn));
     json_object_object_add(jobj, "player_action", json_object_new_int(player_action));
 
-    strcat(data, json_object_to_json_string(jobj)); // 문자열 복사
+    strncpy(data, json_object_to_json_string(jobj), size); // 문자열 복사
 
     return data;
 }

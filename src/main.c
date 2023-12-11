@@ -3,7 +3,6 @@
 #define PORT 4848
 
 Game* game;
-struct sockaddr_in client_addr;
 pthread_mutex_t g_mutex;
 
 int main() {
@@ -11,6 +10,7 @@ int main() {
     pthread_t game_thread;
     pthread_t player_thread;
     pthread_t get_start_thread;
+
 
     game = initGame();
     
@@ -82,12 +82,12 @@ int main() {
 }
 
 void* wait_Player(void* socket) {
+    Player* player = NULL;
     int server_sock_fd = (int)socket;
 
     while(1) {
-        Player* player;
         int client_socket_fd;
-        
+        struct sockaddr_in client_addr;
         PLAYER_STATUS player_status;
 
         client_socket_fd = acceptSocket(server_sock_fd, &client_addr, sizeof(client_addr));
@@ -130,16 +130,14 @@ void* sendStartAction(void* player) {
 void* getPlayerAction(void* socket) {
     int client_socket_fd = *((int*)socket);
     Player* player;
-    char* data = (char*)malloc( sizeof(char) * MAX_BUFFER_SIZE);
+    char data[MAX_BUFFER_SIZE];
     int action;
     pthread_t player_thread;
-
-    memset(data, 0, MAX_BUFFER_SIZE);  // 메모리 할당 및 초기화
     
+    memset(data, 0, MAX_BUFFER_SIZE); 
     recvSocket(client_socket_fd, data, MAX_BUFFER_SIZE);
     printf("%s",data);
     action = deserializePlayerAction(data);
-    free(data);
 
     // 플레이어 구하기
     for(int i = 0; i < game->join_num; i++) {
@@ -159,33 +157,32 @@ void* getPlayerAction(void* socket) {
         player->info = PLAYER_NOT_WANT;
     }
 
-    
-    
     return 0;
 }
 
 void* playerJoinGame(void* player) {
     Player* in_game_player = (Player*)player;
     int client_socket_fd = in_game_player->id;
-    char* data;
+    char data[MAX_BUFFER_SIZE];
+    char* get_data;
     int action;
+    
 
     while(1) {
         // 플레이어 턴이면
         if(game->player_turn == in_game_player->id){
-            data = (char*)malloc(sizeof(char) * MAX_BUFFER_SIZE);
+            memset(data, 0, MAX_BUFFER_SIZE);  // 메모리 할당 및 초기화
             recvSocket(client_socket_fd, data, MAX_BUFFER_SIZE);
             action = deserializePlayerAction(data);
-            free(data);
 
             // 플레이어가 카드를 냈을 때
             if(action == PLAYER_DRAW) {
                 pthread_mutex_lock(&g_mutex);
                 putCardOnTable(game, in_game_player);
                 pthread_mutex_unlock(&g_mutex);
-                data = serializeSendData(game, in_game_player, MAX_BUFFER_SIZE);
+                get_data = serializeSendData(game, in_game_player, MAX_BUFFER_SIZE);
                 sendSocket(client_socket_fd, data, MAX_BUFFER_SIZE);
-                free(data);
+                free(get_data);
             }
 
             // 플레이어가 종을 쳤을 때
@@ -193,9 +190,9 @@ void* playerJoinGame(void* player) {
                 pthread_mutex_lock(&g_mutex);
                 ringBell(game, in_game_player);
                 pthread_mutex_unlock(&g_mutex);
-                data = serializeSendData(game, in_game_player, MAX_BUFFER_SIZE);
+                get_data = serializeSendData(game, in_game_player, MAX_BUFFER_SIZE);
                 sendSocket(client_socket_fd, data, MAX_BUFFER_SIZE);
-                free(data);
+                free(get_data);
             }
 
             // 플레이어가 턴을 종료했을 때
@@ -203,9 +200,9 @@ void* playerJoinGame(void* player) {
                 pthread_mutex_lock(&g_mutex);
                 playerTurnEnd(game, in_game_player);
                 pthread_mutex_unlock(&g_mutex);
-                data = serializeSendAction(in_game_player->id, game->player_turn, PLAYER_GAMING, MAX_BUFFER_SIZE);
+                get_data = serializeSendAction(in_game_player->id, game->player_turn, PLAYER_GAMING, MAX_BUFFER_SIZE);
                 sendSocket(client_socket_fd, data, MAX_BUFFER_SIZE);
-                free(data);
+                free(get_data);
             }
             
             // 플레이어가 패배했을 때
@@ -213,9 +210,9 @@ void* playerJoinGame(void* player) {
                 in_game_player->info = PLAYER_LOSE;
                 game->join_num--;
                 destroyPlayer(in_game_player);
-                data = serializeSendAction(in_game_player->id, game->player_turn, PLAYER_BELL, MAX_BUFFER_SIZE);
+                get_data = serializeSendAction(in_game_player->id, game->player_turn, PLAYER_BELL, MAX_BUFFER_SIZE);
                 sendSocket(client_socket_fd, data, MAX_BUFFER_SIZE);
-                free(data);
+                free(get_data);
                 break;
             }
         
@@ -227,9 +224,9 @@ void* playerJoinGame(void* player) {
                     pthread_mutex_lock(&g_mutex);
                     ringBell(game, in_game_player);
                     pthread_mutex_unlock(&g_mutex);
-                    data = serializeSendData(game, in_game_player, MAX_BUFFER_SIZE);
+                    get_data = serializeSendData(game, in_game_player, MAX_BUFFER_SIZE);
                     sendSocket(client_socket_fd, data, MAX_BUFFER_SIZE);
-                    free(data);
+                    free(get_data);
                 }
             }
 
