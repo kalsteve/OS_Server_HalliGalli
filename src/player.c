@@ -27,22 +27,17 @@ Player* setPlayerId(Player* player, int id) {
     return player;
 }
 
-Player* addPlayer(Player* players, Player* player) {
-    static int player_num = 0;
-    Player* new_players = (Player*)malloc(sizeof(Player) * (player_num + 1));
-    for (int i = 0; i <= player_num; i++) {
-        new_players[i] = players[i];
+Player* addPlayer(Player* players, Player* player, int current_num) {
+    Player* new_players = realloc(players, sizeof(Player) * (current_num + 1));
+    if(new_players == NULL) {
+        perror("realloc error in addPlayer");
+        exit(EXIT_FAILURE);
     }
-    new_players[player_num] = *player;    
-    if(player != NULL) {
-        free(player);
-    }
-    player_num++;
+    new_players[current_num] = *player;
     return new_players;
 }
 
 void destroyPlayer(Player* player) {
     destroyCardDeck(player->cardDeck);
     destroyCardDeck(player->cardDeckOnTable);
-    free(player);
 }
