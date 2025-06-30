@@ -23,7 +23,7 @@ typedef struct _Player{
 Player* initPlayer(int id, int card_num);
 Player* createPlayer(int id, int card_num);
 Player* setPlayerId(Player* player, int id);
-Player* addPlayer(Player* players, Player* player);
+Player* addPlayer(Player* players, Player* player, int current_num);
 void destroyPlayer(Player* player);
 
 #endif

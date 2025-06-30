@@ -7,8 +7,6 @@
 Game* initGame() {
     // 카드 덱 초기화
     CardDeck* cardDeck = initCardDeck(MAX_CARD_NUM);
-    // 플레이어 초기화
-    Player* player = initPlayer(0, MAX_CARD_NUM);
 
 
     // 게임 상태 초기화
@@ -18,7 +16,7 @@ Game* initGame() {
     game->join_num = 0;
     game->player_turn = 0;
     game->cardDeck = cardDeck;
-    game->players = player;
+    game->players = NULL;
 
     return game;
 }
@@ -35,9 +33,9 @@ int joinPlayer(Game* game, Player* player) {
     }
 
     // 게임에 플레이어 추가
-    game->players = addPlayer(game->players, player);
-
-    player->info = PLAYER_INIT;
+    game->players = addPlayer(game->players, player, game->join_num);
+    game->players[game->join_num].info = PLAYER_INIT;
+    free(player);
     // 게임에 참여한 플레이어 수 증가
     game->join_num++;
     return 0;
@@ -330,6 +328,8 @@ void destroyGame(Game* game) {
     for(int count = 0; count < game->join_num ; count++) {
         destroyPlayer(&game->players[count]);
     }
+
+    free(game->players);
 
     // 게임에 사용된 카드 덱의 메모리 해제
     destroyCardDeck(game->cardDeck);
